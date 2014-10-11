@@ -16,7 +16,7 @@ public class Client extends EndPoint {
     private final String hostname;
 
     private Socket socket;
-    private Connection serverConnection;
+    private Connection connection;
     private Thread serverThread;
 
     public Client(int port, String hostname) {
@@ -29,8 +29,8 @@ public class Client extends EndPoint {
         try {
             socket = new Socket();
             socket.connect(new InetSocketAddress(hostname, getPort()));
-            serverConnection = new Connection(socket, getProcessingQueue());
-            serverThread = new Thread(serverConnection);
+            connection = new Connection(socket, getProcessingQueue());
+            serverThread = new Thread(connection);
             serverThread.start();
             return true;
         } catch (Exception e) {
@@ -38,4 +38,9 @@ public class Client extends EndPoint {
         }
         return false;
     }
+
+    public Connection getConnection() {
+        return connection;
+    }
+
 }

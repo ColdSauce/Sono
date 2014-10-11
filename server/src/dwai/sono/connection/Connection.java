@@ -48,6 +48,7 @@ public class Connection implements Runnable {
             try {
                 while (in.available() > 0) {
                     Packet packet = Packet.read(in.readByte(), in);
+                    packet.setSender(this);
                     processingQueue.offer(packet);
                 }
             } catch (IOException ex) {

@@ -1,6 +1,5 @@
 package dwai.sono.connection;
 
-import dwai.sono.connection.PacketDecoder;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -18,6 +17,8 @@ public abstract class Packet {
 
     private static final HashMap<Class<? extends Packet>, Byte> ids = new HashMap<Class<? extends Packet>, Byte>();
     private static final HashMap<Byte, PacketDecoder> decoders = new HashMap<Byte, PacketDecoder>();
+
+    private Connection sender = null;
 
     public static Packet read(byte id, ObjectInputStream in) {
         PacketDecoder decoder = decoders.get(id);
@@ -54,6 +55,14 @@ public abstract class Packet {
             decoders.put(id, decoder);
             ids.put(packet, id);
         }
+    }
+
+    public Connection getSender() {
+        return sender;
+    }
+
+    public void setSender(Connection sender) {
+        this.sender = sender;
     }
 
     protected abstract void write(ObjectOutputStream out) throws IOException;
