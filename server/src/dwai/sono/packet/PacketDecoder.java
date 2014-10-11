@@ -1,4 +1,4 @@
-package dwai.sona.packet;
+package dwai.sono.packet;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;

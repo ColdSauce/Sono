@@ -5,7 +5,7 @@ package dwai.sono;
  *
  * @author Team DWAI
  */
-public class Sona {
+public class Sono {
 
     /**
      * @param args the command line arguments

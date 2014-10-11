@@ -1,6 +1,6 @@
 package dwai.sono;
 
-import dwai.sona.packet.Packet;
+import dwai.sono.packet.Packet;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
