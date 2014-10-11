@@ -1,8 +1,6 @@
 package dwai.sono.connection;
 
 import java.util.concurrent.ArrayBlockingQueue;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * @author Team DWAI
@@ -13,11 +11,11 @@ public abstract class EndPoint {
     private final PacketHandler handler;
     private final ArrayBlockingQueue<Packet> processingQueue;
 
-    private Thread processThread;
+    private ThreadProcess processThread;
 
-    public EndPoint(int port, PacketHandler packetHandler, ArrayBlockingQueue<Packet> processingQueue) {
+    public EndPoint(int port, PacketHandler handler, ArrayBlockingQueue<Packet> processingQueue) {
         this.port = port;
-        this.handler = packetHandler;
+        this.handler = handler;
         this.processingQueue = processingQueue;
     }
 
@@ -25,24 +23,15 @@ public abstract class EndPoint {
 
     public boolean start() {
         if (bind()) {
-            Runnable packetProcessor = new Runnable() {
-                @Override
-                public void run() {
-                    while (true) { // Hackathon Code
-                        try {
-                            Packet packet = processingQueue.take();
-                            handler.handle(packet);
-                        } catch (InterruptedException ex) {
-                            Logger.getLogger(EndPoint.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                    }
-                }
-            };
-            processThread = new Thread(packetProcessor);
+            processThread = new ThreadProcess(handler, processingQueue);
             processThread.start();
             return true;
         }
         return false;
+    }
+
+    public void shutdown() {
+        processThread.shutdown();
     }
 
     public int getPort() {
