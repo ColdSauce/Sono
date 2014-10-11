@@ -1,4 +1,4 @@
-package dwai.sona;
+package dwai.sono;
 
 /**
  * Server
