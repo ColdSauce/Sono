@@ -14,6 +14,6 @@ public class PacketHandler {
     }
 
     public void handle(Packet packet) {
-        handlers.get(packet).handle(packet);
+        handlers.get(packet.getClass()).handle(packet);
     }
 }
