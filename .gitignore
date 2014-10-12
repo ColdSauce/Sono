@@ -1,7 +1,7 @@
 */nbproject/*
 manifest.mf
 build.xml
-*/bin/*
+bin/*
 .classpath
 .project
 /server/build/
