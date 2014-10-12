@@ -1,6 +1,9 @@
 */nbproject/*
 manifest.mf
 build.xml
+*/bin/*
+.classpath
+.project
 /server/build/
 /server/JavaApplication16/nbproject/private/
 /sound/build/
