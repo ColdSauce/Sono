@@ -31,18 +31,9 @@ public class Sound {
                     count += Math.abs(temp[i]);
                 }
                 count = count / (temp.length * 128);
-                System.out.printf("%.3f%% %s\n", count, line((int) (count * 100)));
             }
         } catch (LineUnavailableException ex) {
             Logger.getLogger(Sound.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
-
-    public static String line(int length) {
-        StringBuilder builder = new StringBuilder(length);
-        for (int i = 0; i < length; i++) {
-            builder.append('█');
-        }
-        return builder.toString();
     }
 }
