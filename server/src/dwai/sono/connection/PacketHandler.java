@@ -1,8 +1,7 @@
 package dwai.sono.connection;
 
 /**
- *
- * @author Team DWAI
+ * @author Joseph Cumbo (mooman219)
  */
 public interface PacketHandler {
 

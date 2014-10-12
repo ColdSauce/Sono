@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 
 /**
- * @author Team DWAI
+ * @author Joseph Cumbo (mooman219)
  */
 public interface PacketDecoder {
 

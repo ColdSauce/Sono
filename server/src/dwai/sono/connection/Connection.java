@@ -6,11 +6,9 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
- * @author Team DWAI
+ * @author Joseph Cumbo (mooman219)
  */
 public class Connection implements Runnable {
 
@@ -37,7 +35,7 @@ public class Connection implements Runnable {
         try {
             pendingPackets.put(packet);
         } catch (InterruptedException ex) {
-            Logger.getLogger(Connection.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
         }
     }
 
@@ -45,22 +43,42 @@ public class Connection implements Runnable {
     public void run() {
         running.set(true);
         while (running.get()) {
-            try {
-                while (in.available() > 0) {
-                    Packet packet = Packet.read(in.readByte(), in);
-                    packet.setSender(this);
-                    processingQueue.offer(packet);
-                }
-            } catch (IOException ex) {
-                Logger.getLogger(Connection.class.getName()).log(Level.SEVERE, null, ex);
+            if (!attemptReads() || !attemptWrites()) {
+                System.out.println("Connection error, shutting down connection.");
+                shutdown();
             }
-            if (!pendingPackets.isEmpty()) {
-                Packet packet;
-                while ((packet = pendingPackets.poll()) != null) {
-                    Packet.send(out, packet);
+        }
+        try {
+            this.socket.close();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        System.out.println("Connection ended");
+    }
+
+    private boolean attemptReads() {
+        try {
+            while (in.available() > 0) {
+                Packet packet = Packet.read(in.readByte(), in);
+                packet.setSender(this);
+                processingQueue.offer(packet);
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        return true;
+    }
+
+    private boolean attemptWrites() {
+        if (!pendingPackets.isEmpty()) {
+            Packet packet;
+            while ((packet = pendingPackets.poll()) != null) {
+                if (!Packet.send(out, packet)) {
+                    return false;
                 }
             }
         }
+        return true;
     }
 
     public void shutdown() {

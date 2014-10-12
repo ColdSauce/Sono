@@ -1,9 +1,11 @@
 package dwai.sono.connection;
 
+import java.io.IOException;
+import java.net.BindException;
 import java.util.concurrent.ArrayBlockingQueue;
 
 /**
- * @author Team DWAI
+ * @author Joseph Cumbo (mooman219)
  */
 public abstract class EndPoint {
 
@@ -19,13 +21,18 @@ public abstract class EndPoint {
         this.processingQueue = processingQueue;
     }
 
-    protected abstract boolean bind();
+    protected abstract void bind() throws IOException;
 
     public boolean start() {
-        if (bind()) {
+        try {
+            bind();
             processThread = new ThreadProcess(handler, processingQueue);
             processThread.start();
             return true;
+        } catch (BindException ex) {
+            System.out.println("Port " + port + " already binded. Unable to start server.");
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
         return false;
     }

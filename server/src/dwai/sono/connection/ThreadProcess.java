@@ -2,11 +2,9 @@ package dwai.sono.connection;
 
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
- * @author Team DWAI
+ * @author Joseph Cumbo (mooman219)
  */
 public class ThreadProcess extends Thread {
 
@@ -28,7 +26,7 @@ public class ThreadProcess extends Thread {
                 Packet packet = processingQueue.take();
                 packetHandler.handle(packet);
             } catch (InterruptedException ex) {
-                Logger.getLogger(EndPoint.class.getName()).log(Level.SEVERE, null, ex);
+                ex.printStackTrace();
             }
         }
     }

@@ -1,14 +1,13 @@
 package dwai.sono.server;
 
 import dwai.sono.connection.Connection;
+import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
- * @author Team DWAI
+ * @author Joseph Cumbo (mooman219)
  */
 public class ThreadAccept extends Thread {
 
@@ -30,8 +29,9 @@ public class ThreadAccept extends Thread {
                 Socket socket = serverSocket.accept();
                 Connection connection = new Connection(socket, server.getProcessingQueue());
                 server.getClientPool().submit(connection);
-            } catch (Exception e) {
-                Logger.getLogger(ThreadAccept.class.getName()).log(Level.WARNING, null, e);
+            } catch (IOException ex) {
+                System.out.println("Error accepting connection. Skipping.");
+                ex.printStackTrace();
             }
         }
     }

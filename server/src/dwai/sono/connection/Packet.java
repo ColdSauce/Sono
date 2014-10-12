@@ -3,13 +3,12 @@ package dwai.sono.connection;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.SocketException;
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
- * @author Team DWAI
+ * @author Joseph Cumbo (mooman219)
  */
 public abstract class Packet {
 
@@ -20,31 +19,47 @@ public abstract class Packet {
 
     private Connection sender = null;
 
+    public static byte getPacketId(Class<? extends Packet> packet) {
+        return ids.get(packet);
+    }
+
     public static Packet read(byte id, ObjectInputStream in) {
         PacketDecoder decoder = decoders.get(id);
         if (decoder != null) {
             try {
                 return decoder.decode(in);
             } catch (IOException ex) {
-                Logger.getLogger(Packet.class.getName()).log(Level.SEVERE, null, ex);
+                ex.printStackTrace();
             }
         }
         return null;
     }
 
-    public static void send(ObjectOutputStream out, Packet p) {
+    /**
+     * Writes Packet 'p' to the output 'out'.
+     *
+     * @param out the output being written to.
+     * @param p the packet being written.
+     * @throws IllegalStateException if the packet being written has not been
+     * registered.
+     * @return false if the underlying socket has closed, true otherwise.
+     */
+    public static boolean send(ObjectOutputStream out, Packet p) {
         byte id = ids.get(p.getClass());
         if (id != 0) {
             try {
                 out.writeByte(id);
                 p.write(out);
                 out.flush();
+            } catch (SocketException ex) {
+                return false;
             } catch (IOException ex) {
-                Logger.getLogger(Packet.class.getName()).log(Level.SEVERE, null, ex);
+                ex.printStackTrace();
             }
         } else {
             throw new IllegalStateException("Packet.send: Packet ID (" + id + ") does not exist.");
         }
+        return true;
     }
 
     public static void registerPacket(Class<? extends Packet> packet, PacketDecoder decoder) {

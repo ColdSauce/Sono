@@ -2,14 +2,13 @@ package dwai.sono.client;
 
 import dwai.sono.connection.Connection;
 import dwai.sono.connection.EndPoint;
+import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.concurrent.ArrayBlockingQueue;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
- * @author Team DWAI
+ * @author Joseph Cumbo (mooman219)
  */
 public class Client extends EndPoint {
 
@@ -25,18 +24,18 @@ public class Client extends EndPoint {
     }
 
     @Override
-    protected boolean bind() {
-        try {
-            socket = new Socket();
-            socket.connect(new InetSocketAddress(hostname, getPort()));
-            connection = new Connection(socket, getProcessingQueue());
-            serverThread = new Thread(connection);
-            serverThread.start();
-            return true;
-        } catch (Exception e) {
-            Logger.getLogger(Client.class.toString()).log(Level.WARNING, null, e);
-        }
-        return false;
+    protected void bind() throws IOException {
+        socket = new Socket();
+        socket.connect(new InetSocketAddress(hostname, getPort()));
+        connection = new Connection(socket, getProcessingQueue());
+        serverThread = new Thread(connection);
+        serverThread.start();
+    }
+
+    @Override
+    public void shutdown() {
+        super.shutdown();
+        connection.shutdown();
     }
 
     public Connection getConnection() {

@@ -7,11 +7,9 @@ import java.net.ServerSocket;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
- * @author Team DWAI
+ * @author Joseph Cumbo (mooman219)
  */
 public class Server extends EndPoint {
 
@@ -27,19 +25,20 @@ public class Server extends EndPoint {
     }
 
     @Override
-    protected boolean bind() {
-        try {
-            clientPool = Executors.newFixedThreadPool(maxConnections);
-            serverSocket = new ServerSocket();
-            serverSocket.setPerformancePreferences(1, 2, 0);
-            serverSocket.bind(new InetSocketAddress(getPort()), 64);
-            acceptThread = new ThreadAccept(serverSocket, this);
-            acceptThread.start();
-            return true;
-        } catch (IOException e) {
-            Logger.getLogger(Server.class.toString()).log(Level.WARNING, null, e);
-        }
-        return false;
+    protected void bind() throws IOException {
+        clientPool = Executors.newFixedThreadPool(maxConnections);
+        serverSocket = new ServerSocket();
+        serverSocket.setPerformancePreferences(1, 2, 0);
+        serverSocket.bind(new InetSocketAddress(getPort()), 64);
+        acceptThread = new ThreadAccept(serverSocket, this);
+        acceptThread.start();
+    }
+
+    @Override
+    public void shutdown() {
+        super.shutdown();
+        acceptThread.shutdown();
+        clientPool.shutdownNow();
     }
 
     public int getMaxConnections() {
