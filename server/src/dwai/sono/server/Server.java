@@ -22,8 +22,9 @@ public class Server extends EndPoint {
     private ThreadAccept acceptThread;
 
     public Server(int port, int maxConnections) {
-        super(port, new ServerPacketHandler(), new ArrayBlockingQueue<>(128));
+        super(port, new ArrayBlockingQueue<>(128));
         this.maxConnections = maxConnections;
+        ServerPacketHandler.setup(this.getPacketHandler());
 
         Packet.registerPacket(Packet1Sound.class, Packet1Sound.getDecoder());
     }

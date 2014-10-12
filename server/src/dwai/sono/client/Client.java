@@ -7,7 +7,6 @@ import dwai.sono.connection.packet.Packet1Sound;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.util.concurrent.ArrayBlockingQueue;
 
 /**
  * @author Joseph Cumbo (mooman219)
@@ -21,7 +20,7 @@ public class Client extends EndPoint {
     private Thread serverThread;
 
     public Client(int port, String hostname) {
-        super(port, new ClientPacketHandler(), new ArrayBlockingQueue<>(128));
+        super(port, new ClientPacketHandler(), new ArrayBlockingQueue<Packet>(128));
         this.hostname = hostname;
 
         Packet.registerPacket(Packet1Sound.class, Packet1Sound.getDecoder());

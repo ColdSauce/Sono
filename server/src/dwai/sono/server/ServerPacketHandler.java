@@ -3,31 +3,39 @@ package dwai.sono.server;
 import dwai.sono.Sono;
 import dwai.sono.connection.Connection;
 import dwai.sono.connection.Packet;
+import dwai.sono.connection.PacketHandle;
 import dwai.sono.connection.PacketHandler;
 import dwai.sono.connection.packet.Packet1Sound;
+import dwai.sono.connection.packet.Packet2CoolKid;
 
 /**
  * @author Joseph Cumbo (mooman219)
  */
-public class ServerPacketHandler implements PacketHandler {
+public class ServerPacketHandler {
 
-    private Connection target = null;
+    private static Connection target = null;
 
-    @Override
-    public void handle(Packet packet) {
-        if (packet instanceof Packet1Sound) {
-            Packet1Sound test = (Packet1Sound) packet;
-            System.out.println(bar(test.getAverage() - Sono.lastAverage));
-            test.setDifference(test.getAverage() - Sono.lastAverage);
-            if (target != null) {
-                target.send(test);
+    public static void setup(PacketHandler handler) {
+        handler.register(Packet1Sound.class, new PacketHandle() {
+            @Override
+            public void handle(Packet packet) {
+                Packet1Sound test = (Packet1Sound) packet;
+                System.out.println(bar(test.getAverage() - Sono.lastAverage));
+                test.setDifference(test.getAverage() - Sono.lastAverage);
+                if (target != null) {
+                    target.send(test);
+                }
             }
-        } else if (packet instanceof Packet1Sound) {
-            target = packet.getSender();
-        }
+        });
+        handler.register(Packet2CoolKid.class, new PacketHandle() {
+            @Override
+            public void handle(Packet packet) {
+                target = packet.getSender();
+            }
+        });
     }
 
-    public String bar(float amount) {
+    public static String bar(float amount) {
         int modified = (int) (amount * 100);
         StringBuilder builder = new StringBuilder(100);
         if (modified < 0) {

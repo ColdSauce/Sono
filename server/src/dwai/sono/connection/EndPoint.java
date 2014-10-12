@@ -15,9 +15,9 @@ public abstract class EndPoint {
 
     private ThreadProcess processThread;
 
-    public EndPoint(int port, PacketHandler handler, ArrayBlockingQueue<Packet> processingQueue) {
+    public EndPoint(int port, ArrayBlockingQueue<Packet> processingQueue) {
         this.port = port;
-        this.handler = handler;
+        this.handler = new PacketHandler();
         this.processingQueue = processingQueue;
     }
 
