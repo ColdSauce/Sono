@@ -63,6 +63,10 @@ public abstract class Packet {
     }
 
     public static void registerPacket(Class<? extends Packet> packet, PacketDecoder decoder) {
+        if (ids.containsKey(packet)) {
+            System.out.println("Packet " + packet.getName() + " already registered");
+            return;
+        }
         byte id = (byte) (packetCount.getAndIncrement() & 0xFF);
         if (decoders.containsKey(id)) {
             throw new IllegalStateException("Too many packets have been registered. Unable to register " + id);

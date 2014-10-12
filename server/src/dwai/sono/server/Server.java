@@ -1,6 +1,8 @@
 package dwai.sono.server;
 
 import dwai.sono.connection.EndPoint;
+import dwai.sono.connection.Packet;
+import dwai.sono.connection.packet.Packet1Sound;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
@@ -22,6 +24,8 @@ public class Server extends EndPoint {
     public Server(int port, int maxConnections) {
         super(port, new ServerPacketHandler(), new ArrayBlockingQueue<>(128));
         this.maxConnections = maxConnections;
+
+        Packet.registerPacket(Packet1Sound.class, Packet1Sound.getDecoder());
     }
 
     @Override

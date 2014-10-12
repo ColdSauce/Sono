@@ -27,7 +27,7 @@ public class Sono {
     }
 
     public static void server() {
-        Server server = new Server(38171, 3);
+        Server server = new Server(31281, 3);
         server.start();
 
         TargetDataLine microphone = getMicrophone();
@@ -42,7 +42,7 @@ public class Sono {
     }
 
     public static void client() {
-        Client client = new Client(38171, "172.31.241.43");
+        Client client = new Client(31281, "172.31.241.43");
         client.start();
 
         TargetDataLine microphone = getMicrophone();

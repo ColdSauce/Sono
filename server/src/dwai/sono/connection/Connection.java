@@ -43,7 +43,8 @@ public class Connection implements Runnable {
     public void run() {
         running.set(true);
         while (running.get()) {
-            if (!attemptReads() || !attemptWrites()) {
+            attemptReads();
+            if (!attemptWrites()) {
                 System.out.println("Connection error, shutting down connection.");
                 shutdown();
             }

@@ -9,39 +9,24 @@ import java.io.ObjectOutputStream;
 /**
  * @author Joseph Cumbo (mooman219)
  */
-public class Packet1Sound extends Packet {
+public class Packet2CoolKid extends Packet {
 
-    private float difference;
-
-    public Packet1Sound(float difference) {
-        this.difference = difference;
-    }
-
-    public float getAverage() {
-        return difference;
-    }
-
-    public void setDifference(float difference) {
-        this.difference = difference;
+    public Packet2CoolKid() {
     }
 
     @Override
     protected void write(ObjectOutputStream out) throws IOException {
-        out.writeFloat(difference);
     }
 
     @Override
     protected void read(ObjectInputStream in) throws IOException {
-        difference = in.readFloat();
     }
 
     public static PacketDecoder getDecoder() {
         return new PacketDecoder() {
             @Override
             public Packet decode(ObjectInputStream in) throws IOException {
-                Packet1Sound packet = new Packet1Sound(0);
-                packet.read(in);
-                return packet;
+                return new Packet2CoolKid();
             }
         };
     }

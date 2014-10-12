@@ -2,6 +2,8 @@ package dwai.sono.client;
 
 import dwai.sono.connection.Connection;
 import dwai.sono.connection.EndPoint;
+import dwai.sono.connection.Packet;
+import dwai.sono.connection.packet.Packet1Sound;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
@@ -21,6 +23,8 @@ public class Client extends EndPoint {
     public Client(int port, String hostname) {
         super(port, new ClientPacketHandler(), new ArrayBlockingQueue<>(128));
         this.hostname = hostname;
+
+        Packet.registerPacket(Packet1Sound.class, Packet1Sound.getDecoder());
     }
 
     @Override
