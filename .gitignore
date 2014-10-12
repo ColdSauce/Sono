@@ -2,3 +2,5 @@
 manifest.mf
 build.xml
 /server/build/
+/server/JavaApplication16/nbproject/private/
+/sound/build/
